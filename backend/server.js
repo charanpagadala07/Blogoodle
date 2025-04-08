@@ -14,9 +14,10 @@ cloudinary.config({
 });
 
 
-import authRoutes from "./routes/auth.routes.js";
-import userRoutes from "./routes/user.routes.js";
-import blogRoutes from "./routes/blog.routes.js";
+import authRoutes from "./routes/auth.route.js";
+import userRoutes from "./routes/user.route.js";
+import blogRoutes from "./routes/blog.route.js";
+import notificationRouters from "./routes/notification.route.js";
 import connectDB from "./lib/db.js";
 import cookieParser from "cookie-parser";
 
@@ -28,6 +29,7 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/blog", blogRoutes);
+app.use("/api/v1/notification", notificationRouters);
 
 app.listen(PORT, ()=>{
     console.log(`Server is running on port http://localhost:${PORT}`);
