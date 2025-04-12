@@ -38,7 +38,16 @@ const Sidebar = () => {
 	});
 
 
-	const {data:authUser} = useQuery({queryKey:["authUser"]});
+	const {data:authUser} = useQuery({
+		queryKey:["authUser"],
+		// queryFn: async () => {
+		// 	const res = await fetch('/api/v1/auth/me');
+		// 	if (!res.ok) {
+		// 		throw new Error('Failed to fetch user data');
+		// 	}
+		// 	return res.json();
+		// },
+	});
 
 	return (
 		<div className='md:flex-[2_2_0] w-18 max-w-52'>

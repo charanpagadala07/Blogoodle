@@ -5,19 +5,59 @@ import { FaRegBookmark } from "react-icons/fa6";
 import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import LoadingSpinner from "./LoadingSpinner";
 
 const Blog = ({ blog }) => {
 	const [comment, setComment] = useState("");
+	const queryClient = useQueryClient();
+	const {data:authUser} = useQuery({
+		queryKey: ['authUser'],
+		// queryFn: async () => {
+		// 	const res = await fetch('/api/v1/auth/me'); // Replace with your actual API endpoint
+		// 	if (!res.ok) {
+		// 		throw new Error('Failed to fetch user data');
+		// 	}
+		// 	return res.json();
+		// },
+	})
 	const blogOwner = blog.user;
 	const isLiked = false;
 
-	const isMyBlog = true;
+	const {mutate: deleteBlog, isPending} = useMutation({
+		mutationFn: async () => {
+			try {
+				const res = await fetch(`/api/v1/blog/${blog._id}`, {
+					method: "DELETE",
+				});
+				const data = await res.json();
+				if (data.error) return null;
+				if (!res.ok) {
+					throw new Error(data.error || "Something went wrong");
+				}
+				return data;				
+			} catch (error) {
+				throw new Error(error);
+				
+			}
+		},
+		onSuccess: () => {
+			toast.success("Blog deleted successfully");
+			queryClient.invalidateQueries({ queryKey: ["blogs"] });
+			queryClient.invalidateQueries({ queryKey: ["authUser"] });
+		},
+	})
+
+	const isMyBlog = authUser._id === blog.user._id;
 
 	const formattedDate = "1h";
 
 	const isCommenting = false;
 
-	const handleDeleteBlog = () => {};
+	const handleDeleteBlog = () => {
+		deleteBlog();
+	};
 
 	const handleBlogComment = (e) => {
 		e.preventDefault();
@@ -45,7 +85,10 @@ const Blog = ({ blog }) => {
 						</span>
 						{isMyBlog && (
 							<span className='flex justify-end flex-1'>
-								<FaTrash className='cursor-pointer hover:text-red-500' onClick={handleDeleteBlog} />
+								{!isPending && <FaTrash className='cursor-pointer hover:text-red-500' onClick={handleDeleteBlog} />}
+								{isPending && (
+									<LoadingSpinner size="sm" />
+								)}
 							</span>
 						)}
 					</div>
