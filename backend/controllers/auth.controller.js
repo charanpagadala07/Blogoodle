@@ -3,6 +3,7 @@ import bcrypt, { genSalt, hash } from "bcryptjs";
 import { generateTokenandSetCookie } from "../lib/utils/generateToken.js";
 
 export const signup = async ( req, res) =>{
+    console.log(req.body);
     try {
         const {username, fullname, email, password} = req.body;
         if(!username || !fullname || !email || !password){
@@ -66,6 +67,8 @@ export const signup = async ( req, res) =>{
             });
 
         }
+
+       
     } catch (error) {
         res.status(500).json({
             message: "Internal server error",

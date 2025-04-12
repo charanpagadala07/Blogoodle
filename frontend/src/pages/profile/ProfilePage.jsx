@@ -12,6 +12,7 @@ import { MdEdit } from "react-icons/md";
 import Blogs from "../../components/common/Blogs";
 
 const ProfilePage = () => {
+	
 	const [coverPic, setcoverPic] = useState(null);
 	const [profilePic, setprofilePic] = useState(null);
 	const [feedType, setFeedType] = useState("blogs");
