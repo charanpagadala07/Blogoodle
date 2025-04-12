@@ -50,7 +50,7 @@ const Blog = ({ blog }) => {
 						)}
 					</div>
 					<div className='flex flex-col gap-3 overflow-hidden'>
-						<span>{blog.text}</span>
+						<span>{blog.content}</span>
 						{blog.img && (
 							<img
 								src={blog.img}

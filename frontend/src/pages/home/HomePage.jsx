@@ -37,7 +37,7 @@ const HomePage = () => {
 				<CreateBlog />
 
 				{/* Blogs */}
-				<Blogs />
+				<Blogs feedType={feedType}/>
 			</div>
 		</>
 	);

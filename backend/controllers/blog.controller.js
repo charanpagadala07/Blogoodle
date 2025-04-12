@@ -20,9 +20,13 @@ export const createBlog = async (req, res) => {
                 message: "Content or image is required",
             });
         }
-        if(image){
-            const img = await cloudinary.uploader.upload(image);
-            image = img.secure_url;
+        if (image) {
+            try {
+                const uploadedImage = await cloudinary.uploader.upload(image);
+                image = uploadedImage.secure_url;
+            } catch (error) {
+                return res.status(500).json({ message: "Image upload failed", error: error.message });
+            }
         }
         const newBlog = new Blog({
             user: userId,
@@ -58,7 +62,7 @@ export const deleteBlog = async (req, res) => {
                 message: "You are not authorized to delete this blog",
             });
         }
-        if(Blog.image) {
+        if(blog.image) {
             const imageId = blog.image.split("/").pop().split(".")[0];
             await cloudinary.uploader.destroy(imageId);
         }
@@ -128,26 +132,34 @@ export const likeunlikeBlog = async (req, res) => {
             // Like the blog
             await Blog.findByIdAndUpdate(blogId, { $push: { likes: userId } });
             await User.findByIdAndUpdate(userId, { $push: { likedposts: blogId } });
-            // Create a notification for the blog owner
-            
-            const notification = new Notification({
+
+            // Create a notification for the blog owner if it doesn't already exist
+            const existingNotification = await Notification.findOne({
                 from: userId,
                 to: blog.user,
                 type: "like",
             });
-            await notification.save();
+
+            if (!existingNotification) {
+                const notification = new Notification({
+                    from: userId,
+                    to: blog.user,
+                    type: "like",
+                });
+                await notification.save();
+            }
 
             return res.status(200).json({
                 message: "Blog liked successfully",
             });
-        }        
+        }  
     } catch (error) {
         return res.status(500).json({
             message: "Internal server error",
             error: error.message,
         });
     }
-}
+};
 
 export const getallblogs = async (req, res) => {    
     try {
@@ -160,9 +172,7 @@ export const getallblogs = async (req, res) => {
         })
 
         if(blogs.length === 0) {
-            return res.status(404).json({
-                message: "No blogs found",
-            });
+            return res.status(200).json([]);
         }
 
         res.status(200).json(blogs);
@@ -223,9 +233,10 @@ export const followingblogs = async (req, res) => {
         }).sort({createdAt:-1});
 
         if(feedblogs.length === 0) {
-            return res.status(404).json({
-                message: "No blogs found",
-            });
+            // return res.status(404).json({
+            //     message: "No blogs found",
+            // });
+            return res.status(200).json([]);
         }
         res.status(200).json(feedblogs);
         
@@ -256,9 +267,10 @@ export const userBlogs = async (req, res) => {
             select:'-password'
         }).sort({createdAt:-1});
         if(blogs.length === 0) {
-            return res.status(404).json({
-                message: "No blogs found",
-            });
+            // return res.status(404).json({
+            //     message: "No blogs found",
+            // });
+            return res.status(200).json([]);
         }   
 
         res.status(200).json(blogs);
