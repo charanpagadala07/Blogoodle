@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import LoadingSpinner from "./LoadingSpinner";
+import { formatPostDate } from "../../utils/date";
 
 const Blog = ({ blog }) => {
 	const [comment, setComment] = useState("");
@@ -23,9 +24,9 @@ const Blog = ({ blog }) => {
 		// },
 	})
 	const blogOwner = blog.user;
-	const isLiked = false;
+	const isLiked = blog.likes.includes(authUser._id);
 
-	const {mutate: deleteBlog, isPending} = useMutation({
+	const {mutate: deleteBlog, isPending:isDeleting} = useMutation({
 		mutationFn: async () => {
 			try {
 				const res = await fetch(`/api/v1/blog/${blog._id}`, {
@@ -49,11 +50,83 @@ const Blog = ({ blog }) => {
 		},
 	})
 
+
+	const {mutate:likepost, isLiking} = useMutation({
+		mutationFn: async () => {
+			try {
+				const res = await fetch(`/api/v1/blog/like/${blog._id}`, {
+					method: "POST",
+				});
+				const data = await res.json();
+				if (!res.ok) {
+					throw new Error(data.error || "Something went wrong");
+				}
+				return data;				
+			} catch (error) {
+				throw new Error(error);
+				
+			}
+		},
+		onSuccess: (updatedLikes) => {
+			queryClient.invalidateQueries({ queryKey: ["blogs"] });	
+			queryClient.setQueryData(["blogs"], (oldData) => {
+				if (!oldData) return [];
+				return oldData.map((b) => {
+					if (b._id === blog._id) {
+						return { ...b, likes: updatedLikes };
+					}
+					return b;
+				});
+			});
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		}
+	})
+
+	const {mutate:commentOnBlog, isPending: isCommenting} = useMutation({
+		mutationFn: async () => {
+			try {
+				const res = await fetch(`/api/v1/blog/comment/${blog._id}`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ text: comment }),
+				});
+				const data = await res.json();
+				if (!res.ok) {
+					throw new Error(data.error || "Something went wrong");
+				}
+				return data;				
+			} catch (error) {
+				throw new Error(error);
+				
+			}
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["blogs"] });
+			setComment("");
+			toast.success("Comment added successfully");
+			queryClient.setQueryData(["blogs"], (oldData) => {
+				if (!oldData) return [];
+				return oldData.map((b) => {
+					if (b._id === blog._id) {
+						return { ...b, comments: [...b.comments, { text: comment, user: authUser }] };
+					}
+					return b;
+				});
+			});	
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		}
+	});
+
+
 	const isMyBlog = authUser._id === blog.user._id;
 
-	const formattedDate = "1h";
-
-	const isCommenting = false;
+	const formattedDate = formatPostDate(blog.createdAt);
 
 	const handleDeleteBlog = () => {
 		deleteBlog();
@@ -61,9 +134,14 @@ const Blog = ({ blog }) => {
 
 	const handleBlogComment = (e) => {
 		e.preventDefault();
+		if (isCommenting) return;
+		commentOnBlog();
 	};
 
-	const handleLikeBlog = () => {};
+	const handleLikeBlog = () => {
+		if (isLiking) return;
+		likepost();
+	};
 
 	return (
 		<>
@@ -85,8 +163,8 @@ const Blog = ({ blog }) => {
 						</span>
 						{isMyBlog && (
 							<span className='flex justify-end flex-1'>
-								{!isPending && <FaTrash className='cursor-pointer hover:text-red-500' onClick={handleDeleteBlog} />}
-								{isPending && (
+								{!isDeleting && <FaTrash className='cursor-pointer hover:text-red-500' onClick={handleDeleteBlog} />}
+								{isDeleting && (
 									<LoadingSpinner size="sm" />
 								)}
 							</span>
@@ -156,9 +234,9 @@ const Blog = ({ blog }) => {
 										/>
 										<button className='btn btn-primary rounded-full btn-sm text-white px-4'>
 											{isCommenting ? (
-												<span className='loading loading-spinner loading-md'></span>
+												<LoadingSpinner size='sm' />
 											) : (
-												"blog"
+												"post"
 											)}
 										</button>
 									</form>
@@ -172,14 +250,15 @@ const Blog = ({ blog }) => {
 								<span className='text-sm text-slate-500 group-hover:text-green-500'>0</span>
 							</div>
 							<div className='flex gap-1 items-center group cursor-pointer' onClick={handleLikeBlog}>
-								{!isLiked && (
+								{isLiking && <LoadingSpinner size='sm' />}
+								{(!isLiked && !isLiking) && (
 									<FaRegHeart className='w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500' />
 								)}
-								{isLiked && <FaRegHeart className='w-4 h-4 cursor-pointer text-pink-500 ' />}
+								{isLiked && !isLiking && <FaRegHeart className='w-4 h-4 cursor-pointer text-pink-500 ' />}
 
 								<span
-									className={`text-sm text-slate-500 group-hover:text-pink-500 ${
-										isLiked ? "text-pink-500" : ""
+									className={`text-sm  group-hover:text-pink-500 ${
+										isLiked ? "text-pink-500" : "text-slate-500"
 									}`}
 								>
 									{blog.likes.length}

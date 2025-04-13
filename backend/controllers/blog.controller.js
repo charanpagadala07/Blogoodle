@@ -107,59 +107,103 @@ export const commentOnBlog = async (req, res) => {
 
 }
 
-export const likeunlikeBlog = async (req, res) => { 
-    try {
-        const userId = req.user._id;
-        const { id: blogId } = req.params;
+// export const likeunlikeBlog = async (req, res) => { 
 
-        const blog = await Blog.findById(blogId);
-        if (!blog) {
-            return res.status(404).json({
-                message: "Blog not found",
-            });
-        }
+//     try {
+//         const userId = req.user._id;
+//         const { id: blogId } = req.params;
 
-        const isLiked = blog.likes.includes(userId.toString());
+//         const blog = await Blog.findById(blogId);
+//         if (!blog) {
+//             return res.status(404).json({
+//                 message: "Blog not found",
+//             });
+//         }
 
-        if (isLiked) {
-            // Unlike the blog
-            await Blog.findByIdAndUpdate(blogId, { $pull: { likes: userId } });
-            await User.findByIdAndUpdate(userId, { $pull: { likedposts: blogId } });
-            return res.status(200).json({
-                message: "Blog unliked successfully",
-            });
-        } else {
-            // Like the blog
-            await Blog.findByIdAndUpdate(blogId, { $push: { likes: userId } });
-            await User.findByIdAndUpdate(userId, { $push: { likedposts: blogId } });
+//         const isLiked = blog.likes.includes(userId.toString());
 
-            // Create a notification for the blog owner if it doesn't already exist
-            const existingNotification = await Notification.findOne({
-                from: userId,
-                to: blog.user,
-                type: "like",
-            });
+//         if (isLiked) {
+//             // Unlike the blog
+//             await Blog.findByIdAndUpdate(blogId, { $pull: { likes: userId } });
+//             await User.findByIdAndUpdate(userId, { $pull: { likedposts: blogId } });
+//             // return res.status(200).json({
+//             //     message: "Blog unliked successfully",
+//             // });
+//             const updatedLikes = blog.likes.filter((like) => like.toString() !== userId.toString());
+//             res.status(200).json(updatedLikes);
+//         } else {
+//             // Like the blog
+//             await Blog.findByIdAndUpdate(blogId, { $push: { likes: userId } });
+//             await User.findByIdAndUpdate(userId, { $push: { likedposts: blogId } });
 
-            if (!existingNotification) {
-                const notification = new Notification({
-                    from: userId,
-                    to: blog.user,
-                    type: "like",
-                });
-                await notification.save();
-            }
+//             // Create a notification for the blog owner if it doesn't already exist
+//             const existingNotification = await Notification.findOne({
+//                 from: userId,
+//                 to: blog.user,
+//                 type: "like",
+//             });
 
-            return res.status(200).json({
-                message: "Blog liked successfully",
-            });
-        }  
-    } catch (error) {
-        return res.status(500).json({
-            message: "Internal server error",
-            error: error.message,
-        });
-    }
+//             if (!existingNotification) {
+//                 const notification = new Notification({
+//                     from: userId,
+//                     to: blog.user,
+//                     type: "like",
+//                 });
+//                 await notification.save();
+//             }
+//             const updatedLikes = blog.likes;
+//             return res.status(200).json(updatedLikes);
+//         }  
+//     } catch (error) {
+//         return res.status(500).json({
+//             message: "Internal server error",
+//             error: error.message,
+//         });
+//     }
+// };
+
+export const likeunlikeBlog = async (req, res) => {
+	try {
+		const userId = req.user._id;
+		const { id: blogId } = req.params;
+
+		const blog = await Blog.findById(blogId);
+
+		if (!blog) {
+			return res.status(404).json({ error: "blog not found" });
+		}
+
+		const userLikedblog = blog.likes.includes(userId);
+
+		if (userLikedblog) {
+			// Unlike blog
+			await Blog.updateOne({ _id: blogId }, { $pull: { likes: userId } });
+			await User.updateOne({ _id: userId }, { $pull: { likedposts: blogId } });
+
+			const updatedLikes = blog.likes.filter((id) => id.toString() !== userId.toString());
+			res.status(200).json(updatedLikes);
+		} else {
+			// Like blog
+			blog.likes.push(userId);
+			await User.updateOne({ _id: userId }, { $push: { likedblogs: blogId } });
+			await blog.save();
+
+			const notification = new Notification({
+				from: userId,
+				to: blog.user,
+				type: "like",
+			});
+			await notification.save();
+
+			const updatedLikes = blog.likes;
+			res.status(200).json(updatedLikes);
+		}
+	} catch (error) {
+		console.log("Error in likeUnlikeblog controller: ", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
 };
+
 
 export const getallblogs = async (req, res) => {    
     try {
