@@ -129,7 +129,7 @@ export const updateProfile = async (req, res) => {
             });
         }
 
-        if(currenpassword && newpassword){
+        if(currentpassword && newpassword){
             const isMatch = await bcrypt.compare(currentpassword, user.password);
             if(!isMatch){
                 return res.status(400).json({
