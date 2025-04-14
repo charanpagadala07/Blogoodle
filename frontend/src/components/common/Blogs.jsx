@@ -68,22 +68,28 @@ import BlogSkeleton from "../skeletons/BlogSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-const Blogs = ({ feedType }) => {
+const Blogs = ({ feedType, username, userId }) => {
     const getBlogEndpoint = () => {
         switch (feedType) {
             case "foryou":
                 return "/api/v1/blog/all";
             case "following":
                 return "/api/v1/blog/following";
+            case "blogs":
+                return `/api/v1/blog/user/${username}`; 
+            case "likes":
+                return `/api/v1/blog/liked/${userId}`;
             default:
                 return "/api/v1/blog/all";
         }
     };
 
+    console.log("Current Feed Type:", feedType);
+
     const BLOG_ENDPOINT = getBlogEndpoint();
 
     const { data: blogs, isLoading, refetch, isRefetching } = useQuery({
-        queryKey: ["blogs", feedType], // Include feedType in queryKey to refetch on change
+        queryKey: ["blogs", feedType, username], // Include feedType in queryKey to refetch on change
         queryFn: async () => {
             try {
                 const res = await fetch(BLOG_ENDPOINT);
@@ -98,6 +104,8 @@ const Blogs = ({ feedType }) => {
             }
         },
     });
+
+    console.log("Blogs Data:", blogs);
 
     useEffect(() => {
         refetch();
@@ -115,7 +123,7 @@ const Blogs = ({ feedType }) => {
             {!isLoading && blogs?.length === 0 && feedType === "following" && (
                 <p className='text-center my-4'>You are not following anyone yet. Follow someone to see their blogs!</p>
             )}
-            {!isLoading && blogs?.length === 0 && feedType === "foryou" && (
+            {!isLoading && blogs?.length === 0 && (
                 <p className='text-center my-4'>No blogs available in this tab. Check back later!</p>
             )}
             {!isLoading && blogs && blogs.length > 0 && (
