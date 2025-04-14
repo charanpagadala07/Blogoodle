@@ -13,6 +13,8 @@ const EditProfileModal = () => {
 		currentPassword: "",
 	});
 
+	const {data:authUser} = useQuery({queryKey: ["authUser"] });
+
 	const queryClient = useQueryClient();
 
 	const {mutate:updateProfile, isPending:isUpdatingProfile} = useMutation({
@@ -35,19 +37,19 @@ const EditProfileModal = () => {
 				throw new Error(error.message || "Failed to update profile");
 			}
 		},
-		onSuccess: () =>{
+		onSuccess: () => {
 			toast.success("Profile updated successfully");
-			Promise.all([
-				queryClient.invalidateQueries({queryKey: ["userProfile"]}),
-				queryClient.invalidateQueries({queryKey: ["authUser"]}),
-			])
+			document.getElementById("edit_profile_modal").close();
+			// queryClient.invalidateQueries({queryKey: ["authUser"]});
+			// queryClient.invalidateQueries({queryKey: ["userProfile"]});
+			// queryClient.invalidateQueries({queryKey: ["blogs"]});
+			queryClient.invalidateQueries({queryKey: ["user"]});
+			console.log("invalidating queries");
 		},
 		onError: (error) => {
 			toast.error(error.message || "Failed to update profile");
 		}
 	}) 
-
-	const {data:authUser} = useQuery({queryKey: ["authUser"] });
 
 	const handleInputChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
