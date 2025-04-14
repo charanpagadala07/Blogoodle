@@ -1,68 +1,3 @@
-// import Blog from "./Blog";
-// import BlogSkeleton from "../skeletons/BlogSkeleton";
-// import { useQuery } from "@tanstack/react-query";
-// import { useEffect } from "react";
-
-// const Blogs = ({feedType}) => {
-// 	const getBlogEndpoint = () => {
-// 		switch (feedType) {
-// 			case "foryou":
-// 				return "/api/v1/blog/all";
-// 			case "following":
-// 				return "/api/v1/blog/following";
-// 			default:
-// 				return "/api/v1/blog/all";
-// 		}
-// 	};
-
-// 	const BLOG_ENDPOINT = getBlogEndpoint();
-
-// 	const {data: blogs, isLoading, refetch, isRefetching } = useQuery({
-// 		queryKey: ["blogs"],
-// 		queryFn: async () => {
-// 			try {
-// 				const res = await fetch(BLOG_ENDPOINT);
-// 				const data = await res.json();
-// 				if (data.error) return null;
-// 				if (!res.ok) {
-// 					throw new Error(data.error || "Something went wrong");
-// 				}
-// 				return data;
-// 			} catch (error) {
-// 				console.error("Error:", error);
-// 				throw error;
-				
-// 			}
-// 		}
-// 	});
-
-// 	useEffect(() => {	
-// 		refetch();
-// 	}
-// 	, [feedType, refetch]);
-
-// 	return (
-// 		<>
-// 			{isLoading || isRefetching && (
-// 				<div className='flex flex-col justify-center'>
-// 					<BlogSkeleton />
-// 					<BlogSkeleton />
-// 					<BlogSkeleton />
-// 				</div>
-// 			)}
-// 			{!isLoading && blogs?.length === 0 && <p className='text-center my-4'>No BLOGS in this tab. Switch 👻</p>}
-// 			{!isLoading && blogs && (
-// 				<div>
-// 					{blogs.map((blog) => (
-// 						<Blog key={blog._id} blog={blog} />
-// 					))}
-// 				</div>
-// 			)}
-// 		</>
-// 	);
-// };
-// export default Blogs;
-
 import Blog from "./Blog";
 import BlogSkeleton from "../skeletons/BlogSkeleton";
 import { useQuery } from "@tanstack/react-query";
@@ -89,7 +24,7 @@ const Blogs = ({ feedType, username, userId }) => {
     const BLOG_ENDPOINT = getBlogEndpoint();
 
     const { data: blogs, isLoading, refetch, isRefetching } = useQuery({
-        queryKey: ["blogs", feedType, username], // Include feedType in queryKey to refetch on change
+        queryKey: ["blogs", feedType, username],
         queryFn: async () => {
             try {
                 const res = await fetch(BLOG_ENDPOINT);

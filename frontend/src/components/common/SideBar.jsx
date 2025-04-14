@@ -1,5 +1,4 @@
 import XSvg from "../svgs/X";
-
 import { MdHomeFilled } from "react-icons/md";
 import { IoNotifications } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
@@ -8,11 +7,12 @@ import { BiLogOut } from "react-icons/bi";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+
 
 const Sidebar = () => {
-
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
-
 	const { mutate: logout } = useMutation({
 		mutationFn: async () => {
 			try {
@@ -28,25 +28,25 @@ const Sidebar = () => {
 				throw new Error(error);
 			}
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["authUser"] });
+		onSuccess: async () => {
+			// await queryClient.invalidateQueries({ queryKey: ["authUser"] });
+			queryClient.removeQueries({ queryKey: ["authUser"] });
 			toast.success("Logout successful");
+			navigate("/login");
 		},
 		onError: () => {
 			toast.error("Logout failed");
 		},
 	});
 
+	const navigatetologin = () => {
+		navigate('/login');
+		queryClient.invalidateQueries({queryKey:["authUser"]});
+	}
+
 
 	const {data:authUser} = useQuery({
 		queryKey:["authUser"],
-		// queryFn: async () => {
-		// 	const res = await fetch('/api/v1/auth/me');
-		// 	if (!res.ok) {
-		// 		throw new Error('Failed to fetch user data');
-		// 	}
-		// 	return res.json();
-		// },
 	});
 
 	return (
@@ -92,7 +92,7 @@ const Sidebar = () => {
 					>
 						<div className='avatar hidden md:inline-flex'>
 							<div className='w-8 rounded-full'>
-								<img src={authUser?.profileImg || "/avatar-placeholder.png"} />
+								<img src={authUser?.profilePic || "/avatar-placeholder.png"} />
 							</div>
 						</div>
 						<div className='flex justify-between flex-1'>
@@ -104,6 +104,7 @@ const Sidebar = () => {
 							onClick={(e)=>{
 								e.preventDefault();
 								logout();
+								navigatetologin();
 							}} />
 						</div>
 					</Link>

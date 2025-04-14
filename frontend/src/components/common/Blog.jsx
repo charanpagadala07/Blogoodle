@@ -50,7 +50,6 @@ const Blog = ({ blog }) => {
 		},
 	})
 
-
 	const {mutate:likepost, isLiking} = useMutation({
 		mutationFn: async () => {
 			try {

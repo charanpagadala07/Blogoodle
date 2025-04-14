@@ -6,8 +6,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 const CreateBlog = () => {
-    const [text, setText] = useState(""); // 'text' will be mapped to 'content'
-    const [img, setImg] = useState(null); // 'img' will be mapped to 'image'
+    const [text, setText] = useState(""); 
+    const [img, setImg] = useState(null); 
 
     const imgRef = useRef(null);
 
@@ -16,14 +16,13 @@ const CreateBlog = () => {
 
     const { mutate: createBlog, isPending } = useMutation({
         mutationFn: async ({ content, image }) => {
-            console.log({ content, image }); // Debugging log
             try {
                 const res = await fetch("/api/v1/blog/create", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ content, image }), // Use 'image' instead of 'img'
+                    body: JSON.stringify({ content, image }),
                 });
                 const data = await res.json();
                 if (!res.ok) {
@@ -47,7 +46,7 @@ const CreateBlog = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        createBlog({ content: text, image: img }); // Map 'img' to 'image'
+        createBlog({ content: text, image: img }); 
     };
 
     const handleImgChange = (e) => {
@@ -55,9 +54,9 @@ const CreateBlog = () => {
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setImg(reader.result); // Set the Base64 string to 'img'
+                setImg(reader.result); 
             };
-            reader.readAsDataURL(file); // Convert the file to a Base64 string
+            reader.readAsDataURL(file); 
         }
     };
 
@@ -98,7 +97,7 @@ const CreateBlog = () => {
                     </div>
                     <input type="file" accept="image/*" hidden ref={imgRef} onChange={handleImgChange} />
                     <button className="btn btn-primary rounded-full btn-sm text-white px-4">
-                        {isPending ? "Uploading..." : "Blog"}
+                        {isPending ? "Uploading..." : "Post"}
                     </button>
                 </div>
             </form>
