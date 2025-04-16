@@ -71,14 +71,7 @@ npm run dev
  - Now open your browser and navigate to:
 ```bash
 http://localhost:3000
-```
-
-## 🌟 Usage  
-
-### How to Use Flux:  
-1. **Sign Up/Sign In**: Create an account or log in with an existing one.  
-2. **Create Blogs**: Write Blogs with text, images, videos.  
-3. **Follow and Engage**: Build a network by following users and interacting with their blogs.  
+``` 
 
 ---
 
