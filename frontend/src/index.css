@@ -1,4 +1,24 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Chewy&display=swap'); */
+
+@import url('https://fonts.googleapis.com/css2?family=Chewy&family=Poetsen+One&display=swap');
+
 @import "tailwindcss";
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, cupcake, bumblebee, emerald, corporate, synthwave, retro, cyberpunk, valentine, halloween, garden, forest, aqua, lofi, pastel, fantasy, wireframe, black, luxury, dracula, cmyk, autumn, business, acid, lemonade, night, coffee, winter, dim, nord, sunset 
+}
+
+
+
+* {
+  /* font-family: "Chewy", system-ui;
+  font-weight: 400;
+  font-style: normal; */
+  font-family: "Poetsen One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+
+}
+
+.background {
+  background-color: antiquewhite;
 }

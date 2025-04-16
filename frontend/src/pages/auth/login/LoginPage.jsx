@@ -59,7 +59,8 @@ const LoginPage = () => {
 			<div className='flex-1 flex flex-col justify-center items-center w-4/5 ml-20'>
 				<form className='flex gap-4 flex-col' onSubmit={handleSubmit}>
 					<XSvg className='w-24 lg:hidden fill-white' />
-					<h1 className='text-4xl font-extrabold text-white'>{"Let's"} go.</h1>
+					{/* <h1 className='text-4xl font-extrabold text-white'>{"Let's"} go.</h1> */}
+					<h1 className='text-4xl font-extrabold text-amber-900'>Welcome Back !!</h1>
 					<label className='input input-bordered rounded flex items-center lg:w-80 gap-2'>
 						<MdOutlineMail />
 						<input
@@ -83,15 +84,15 @@ const LoginPage = () => {
 							value={formData.password}
 						/>
 					</label>
-					<button className='btn rounded-full btn-primary text-white'>
+					<button className='btn rounded-full bg-amber-300'>
 						{isPending ? "Loading..." : "Login"}
 					</button>
-					{isError && <p className='text-red-500'>{error?.message || "Something went Wrong"}</p>}
+					{isError && <p className='text-red-700'>{error?.message || "Something went Wrong"}</p>}
 				</form>
 				<div className='flex flex-col gap-2 mt-4'>
-					<p className='text-white text-lg'>{"Don't"} have an account?</p>
+					<p className='text-amber-700 text-lg'>{"Don't"} have an account?</p>
 					<Link to='/signup'>
-						<button className='btn rounded-full btn-primary text-white btn-outline lg:w-80 w-full'>Sign up</button>
+						<button className='btn rounded-full text-black bg-amber-100 hover:bg-amber-500 transition-colors border-2 border-amber-800 lg:w-80 w-full'>Sign up</button>
 					</Link>
 				</div>
 			</div>

@@ -147,22 +147,22 @@ const Blog = ({ blog }) => {
 			<div className='flex gap-2 items-start p-4 border-b border-gray-700'>
 				<div className='avatar'>
 					<Link to={`/profile/${blogOwner.username}`} className='w-8 rounded-full overflow-hidden'>
-						<img src={blogOwner.profilePic || "/avatar-placeholder.png"} />
+						<img src={blogOwner.profilePic || "/avatar-placeholder.png"} className="w-8 h-8 rounded-full object-contain" />
 					</Link>
 				</div>
 				<div className='flex flex-col flex-1'>
 					<div className='flex gap-2 items-center'>
-						<Link to={`/profile/${blogOwner.username}`} className='font-bold'>
+						<Link to={`/profile/${blogOwner.username}`} className='font-bold text-md capitalize text-[#470700]'>
 							{blogOwner.fullname}
 						</Link>
 						<span className='text-gray-700 flex gap-1 text-sm'>
-							<Link to={`/profile/${blogOwner.username}`}>@{blogOwner.username}</Link>
+							<Link to={`/profile/${blogOwner.username}`} className="text-[#ba4a3d]">@{blogOwner.username}</Link>
 							<span>·</span>
-							<span>{formattedDate}</span>
+							<span className="text-gray-500">{formattedDate}</span>
 						</span>
 						{isMyBlog && (
 							<span className='flex justify-end flex-1'>
-								{!isDeleting && <FaTrash className='cursor-pointer hover:text-red-500' onClick={handleDeleteBlog} />}
+								{!isDeleting && <FaTrash className='cursor-pointer hover:text-red-600' onClick={handleDeleteBlog} />}
 								{isDeleting && (
 									<LoadingSpinner size="sm" />
 								)}
@@ -170,7 +170,7 @@ const Blog = ({ blog }) => {
 						)}
 					</div>
 					<div className='flex flex-col gap-3 overflow-hidden'>
-						<span>{blog.content}</span>
+						<span className="text-2xl">{blog.content}</span>
 						{blog.img && (
 							<img
 								src={blog.img}
@@ -191,9 +191,9 @@ const Blog = ({ blog }) => {
 								</span>
 							</div>
 							{/* We're using Modal Component from DaisyUI */}
-							<dialog id={`comments_modal${blog._id}`} className='modal border-none outline-none'>
-								<div className='modal-box rounded border border-gray-600'>
-									<h3 className='font-bold text-lg mb-4'>COMMENTS</h3>
+							<dialog id={`comments_modal${blog._id}`} className='modal border-none  outline-none'>
+								<div className='modal-box rounded-4xl border bg-[#FAEBD7] border-gray-600'>
+									<h3 className='font-bold text-amber-950 text-lg mb-4'>COMMENTS</h3>
 									<div className='flex flex-col gap-3 max-h-60 overflow-auto'>
 										{blog.comments.length === 0 && (
 											<p className='text-sm text-slate-500'>
@@ -211,8 +211,8 @@ const Blog = ({ blog }) => {
 												</div>
 												<div className='flex flex-col'>
 													<div className='flex items-center gap-1'>
-														<span className='font-bold'>{comment.user.fullname}</span>
-														<span className='text-gray-700 text-sm'>
+														<span className='font-bold capitalize text-[#470700]'>{comment.user.fullname}</span>
+														<span className='text-sm text-[#ba4a3d]'>
 															@{comment.user.username}
 														</span>
 													</div>
@@ -222,20 +222,20 @@ const Blog = ({ blog }) => {
 										))}
 									</div>
 									<form
-										className='flex gap-2 items-center mt-4 border-t border-gray-600 pt-2'
+										className='flex flex-col gap-2 items-center mt-4 border-t border-gray-600 pt-2'
 										onSubmit={handleBlogComment}
 									>
 										<textarea
-											className='textarea w-full p-1 rounded text-md resize-none border focus:outline-none  border-gray-800'
+											className='textarea w-full p-3 rounded-2xl text-md resize-none border focus:outline-none  border-gray-800'
 											placeholder='Add a comment...'
 											value={comment}
 											onChange={(e) => setComment(e.target.value)}
 										/>
-										<button className='btn btn-primary rounded-full btn-sm text-white px-4'>
+										<button className='btn bg-amber-600 rounded-full btn-sm text-white px-4'>
 											{isCommenting ? (
 												<LoadingSpinner size='sm' />
 											) : (
-												"post"
+												"Post"
 											)}
 										</button>
 									</form>
