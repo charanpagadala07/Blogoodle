@@ -96,7 +96,7 @@ const CreateBlog = () => {
                         <BsEmojiSmileFill className="fill-amber-600 w-5 h-5 cursor-pointer" />
                     </div>
                     <input type="file" accept="image/*" hidden ref={imgRef} onChange={handleImgChange} />
-                    <button className="btn rounded-full bg-amber-600 btn-sm text-white px-4">
+                    <button className="btn rounded-full bg-amber-600 hover:bg-amber-400 transition-colors btn-sm text-white px-4">
                         {isPending ? "Uploading..." : "Post"}
                     </button>
                 </div>
