@@ -58,13 +58,13 @@ const SignUpPage = () => {
 	};
 
 	return (
-		<div className='max-w-screen-xl mx-auto flex h-screen gap-3 px-38'>
-			<div className='flex-1 hidden lg:flex items-center justify-center'>
-				<XSvg className=' lg:w-100 fill-white' />
+		<div className='min-w-screen min-h-screen mx-auto flex gap-3 px-38'>
+			<div className='flex-1 hidden lg:flex items-center w-500 justify-center'>
+				<img src="/logo.png" alt="Logo" className="" />
 			</div>
 			<div className='flex-1 flex flex-col justify-center items-center ml-15'>
-				<form className='lg:w-2/3  mx-auto md:mx-20 flex gap-4 flex-col' onSubmit={handleSubmit}>
-					<XSvg className='w-24 lg:hidden fill-white' />
+				<form className='lg:w-2/3  mx-auto md:mx-20 flex gap-4 md:w-400 flex-col' onSubmit={handleSubmit}>
+					<img src="/logo.png" alt="Logo" className="w-24 lg:hidden"/>
 					<h1 className='text-4xl font-extrabold text-amber-900'>Join today.</h1>
 					<label className='input input-bordered rounded flex items-center gap-2'>
 						<MdOutlineMail />

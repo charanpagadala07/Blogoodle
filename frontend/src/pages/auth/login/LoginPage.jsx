@@ -52,14 +52,13 @@ const LoginPage = () => {
 	};
 
 	return (
-		<div className='max-w-screen-xl flex h-screen items-center lg:ml-40 gap-15 '>
-			<div className='flex-1 hidden lg:flex items-center  justify-center'>
-				<XSvg className='lg:w-100 fill-white' />
+		<div className='max-w-screen-xl flex h-screen items-center lg:ml-33 gap-8 '>
+			<div className='flex-1 hidden lg:flex items-center justify-center'>
+				<img src="/logo.png" alt="Logo" className="lg:w-130"/>
 			</div>
 			<div className='flex-1 flex flex-col justify-center items-center w-4/5 ml-20'>
 				<form className='flex gap-4 flex-col' onSubmit={handleSubmit}>
-					<XSvg className='w-24 lg:hidden fill-white' />
-					{/* <h1 className='text-4xl font-extrabold text-white'>{"Let's"} go.</h1> */}
+					<img src="/logo.png" alt="Logo" className="w-24 lg:hidden"/>
 					<h1 className='text-4xl font-extrabold text-amber-900'>Welcome Back !!</h1>
 					<label className='input input-bordered rounded flex items-center lg:w-80 gap-2'>
 						<MdOutlineMail />
