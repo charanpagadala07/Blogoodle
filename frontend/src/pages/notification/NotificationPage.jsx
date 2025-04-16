@@ -52,7 +52,7 @@ const NotificationPage = () => {
 		<>
 			<div className='flex-[4_4_0] border-l border-r border-gray-700 min-h-screen'>
 				<div className='flex justify-between items-center p-4 border-b border-gray-700'>
-					<p className='font-bold'>Notifications</p>
+					<p className='font-bold text-xl text-amber-900'>Notifications</p>
 					<div className='dropdown '>
 						<div tabIndex={0} role='button' className='m-1'>
 							<IoSettingsOutline className='w-4' />
@@ -76,8 +76,8 @@ const NotificationPage = () => {
 				{notifications?.map((notification) => (
 					<div className='border-b border-gray-700' key={notification._id}>
 						<div className='flex gap-2 p-4'>
-							{notification.type === "follow" && <FaUser className='w-7 h-7 text-primary' />}
-							{notification.type === "like" && <FaHeart className='w-7 h-7 text-red-500' />}
+							{notification.type === "follow" && <FaUser className='w-5 h-5 text-primary' />}
+							{notification.type === "like" && <FaHeart className='w-5 h-5 text-red-500' />}
 							<Link to={`/profile/${notification.from.username}`}>
 								<div className='avatar'>
 									<div className='w-8 rounded-full'>
@@ -85,7 +85,7 @@ const NotificationPage = () => {
 									</div>
 								</div>
 								<div className='flex gap-1'>
-									<span className='font-bold'>@{notification.from.username}</span>{" "}
+									<span className='font-bold text-amber-900'>@{notification.from.username}</span>{" "}
 									{notification.type === "follow" ? "followed you" : "liked your Blog"}
 								</div>
 							</Link>

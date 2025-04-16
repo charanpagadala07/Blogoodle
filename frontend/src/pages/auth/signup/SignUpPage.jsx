@@ -112,7 +112,7 @@ const SignUpPage = () => {
 							value={formData.password}
 						/>
 					</label>
-					<button className='btn rounded-full btn-primary bg-amber-300 text-black lg:w-80'>
+					<button className='btn rounded-full bg-amber-600 hover:bg-amber-300 transition-colors text-white lg:w-80'>
 						{isPending ? "Signing up..." : "Sign up"}
 					</button>
 					{isError && <p className='text-red-700'>{error?.message || "Something went wrong"}</p>}
@@ -120,7 +120,7 @@ const SignUpPage = () => {
 				<div className='flex flex-col lg:w-2/3 gap-2 mt-4'>
 					<p className='text-amber-700 text-lg'>Already have an account?</p>
 					<Link to='/login'>
-						<button className='btn rounded-full btn-primary lg:w-80 text-black bg-amber-100 hover:bg-amber-500 transition-colors border-2 border-amber-800 btn-outline w-full'>Sign in</button>
+						<button className='btn rounded-full text-black bg-amber-100 hover:bg-amber-200 transition-colors border border-amber-800 lg:w-80 w-full'>Sign in</button>
 					</Link>
 				</div>
 			</div>

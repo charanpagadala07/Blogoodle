@@ -226,7 +226,7 @@ const Blog = ({ blog }) => {
 										onSubmit={handleBlogComment}
 									>
 										<textarea
-											className='textarea w-full p-3 rounded-2xl text-md resize-none border focus:outline-none  border-gray-800'
+											className='textarea w-full p-3 bg-[#fcf7f0] rounded-2xl text-md resize-none border focus:outline-none  border-gray-800'
 											placeholder='Add a comment...'
 											value={comment}
 											onChange={(e) => setComment(e.target.value)}
