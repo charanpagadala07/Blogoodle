@@ -5,6 +5,12 @@ A fun and interactive **MERN stack** blogging platform designed for casual write
 
 ---
 
+## Blogoodle - Preview 
+
+[![Blogoodle - Preview](https://img.youtube.com/vi/sLpZJZsHi0I/maxresdefault.jpg)](https://www.youtube.com/watch?v=sLpZJZsHi0I)
+
+
+
 ## 🔧 Tech Stack
 
 **Frontend** – React, Tailwind CSS, DaisyUI, @tanstack/react-query, React Icons, React Hot Toast  
